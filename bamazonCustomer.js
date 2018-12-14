@@ -65,6 +65,7 @@ function askCustomer() {
         }
     ]).then(function(data) {
         let queryData = "SELECT * FROM products WHERE item_id=?"
+        
         connection.query(queryData, [data.id], function(err, result) {
             if (err) throw err;
             let itemInventory = result[0].stock_quantity;
@@ -74,14 +75,28 @@ function askCustomer() {
 
 
             if (changedInventory >= 0) {
-                console.log.log("*************************".magenta)
+                console.log("*************************".magenta)
                 console.log("\n\nYour total costs is $ ".magenta + totalCost + " !\n\n".magenta)
-                console.log.log("*************************".magenta)
+                console.log("*************************".magenta)
+                let updateData = "UPDATE products SET ? WHERE ?"
+                connection.query(updateData,
+                    [
+                        {
+                            stock_quantity: changedInventory
+                        },
+                        {
+                            item_id: data.id
+                        }
+                    ], 
+                    function(err, res) {
+                        return
+                    }
+                )
                 anotherAsk()
             } else {
-                console.log.log("*************************".rainbow)
+                console.log("*****************************".rainbow)
                 console.log("Sorry, insufficient quantity!".rainbow)
-                console.log.log("*************************".rainbow)
+                console.log("*****************************".rainbow)
                 anotherAsk()
             }
         })
@@ -91,9 +106,19 @@ function askCustomer() {
         inquirer.prompt([
             {
                 name: "buy",
-                message: ""
+                type: "confirm",
+                message: "\nWould you like to order another item?\n"
             }
-        ])
+        ]).then(function(data) {
+            if (data.buy) {
+                showProducts()
+            } else {
+                console.log("*************************************************************************")
+                console.log("Thank you for shopping with us! Looking forward to seeing you next time!".america)
+                console.log("*************************************************************************")
+                connection.end()
+            }
+        })
     }
 }
 
