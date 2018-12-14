@@ -41,6 +41,9 @@ function askCustomer() {
                 if (parseInt(input) <= productsInTotal) {
                     return true
                 } else {
+                    console.log("\n\n*************************".cyan);
+                    console.log("*Please enter a valid id*".cyan);
+                    console.log("*************************\n\n".cyan);
                     return false
                 }
             }
@@ -53,13 +56,45 @@ function askCustomer() {
                 if (!isNaN(input) && parseInt(input) > 0) {
                     return true
                 } else {
+                    console.log("\n\n*******************************".cyan);
+                    console.log("*Please enter a valid quantity.*".cyan);
+                    console.log("*********************************\n\n".cyan);
                     return false
                 }
             }
         }
     ]).then(function(data) {
-        console.log(data.id, data.units)
+        let queryData = "SELECT * FROM products WHERE item_id=?"
+        connection.query(queryData, [data.id], function(err, result) {
+            if (err) throw err;
+            let itemInventory = result[0].stock_quantity;
+            let itemPrice = result[0].price;
+            let changedInventory = itemInventory - parseInt(data.units);
+            let totalCost = (parseInt(data.units) * itemPrice).toFixed(2);
+
+
+            if (changedInventory >= 0) {
+                console.log.log("*************************".magenta)
+                console.log("\n\nYour total costs is $ ".magenta + totalCost + " !\n\n".magenta)
+                console.log.log("*************************".magenta)
+                anotherAsk()
+            } else {
+                console.log.log("*************************".rainbow)
+                console.log("Sorry, insufficient quantity!".rainbow)
+                console.log.log("*************************".rainbow)
+                anotherAsk()
+            }
+        })
     })
+
+    function anotherAsk() {
+        inquirer.prompt([
+            {
+                name: "buy",
+                message: ""
+            }
+        ])
+    }
 }
 
 showProducts()
