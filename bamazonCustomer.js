@@ -17,7 +17,7 @@ function showProducts() {
     connection.query(query, function(err, res) {
         if (err) throw err;
         console.log("------------------------------------------------------------------------------")
-        console.log("Item ID Price($) \tProduct")
+        console.log("ID \tPrice($) \tProduct")
         console.log("------------------------------------------------------------------------------")
 
         for (let i = 0; i < res.length; i++) {
@@ -56,7 +56,7 @@ function askCustomer() {
                 if (!isNaN(input) && parseInt(input) > 0) {
                     return true
                 } else {
-                    console.log("\n\n*******************************".cyan);
+                    console.log("\n\n*********************************".cyan);
                     console.log("*Please enter a valid quantity.*".cyan);
                     console.log("*********************************\n\n".cyan);
                     return false
@@ -75,9 +75,9 @@ function askCustomer() {
 
 
             if (changedInventory >= 0) {
-                console.log("*************************".magenta)
+                console.log("***************************************".magenta)
                 console.log("\n\nYour total costs is $ ".magenta + totalCost + " !\n\n".magenta)
-                console.log("*************************".magenta)
+                console.log("***************************************".magenta)
                 let updateData = "UPDATE products SET ? WHERE ?"
                 connection.query(updateData,
                     [
@@ -95,7 +95,7 @@ function askCustomer() {
                 anotherAsk()
             } else {
                 console.log("*****************************".rainbow)
-                console.log("Sorry, insufficient quantity!".rainbow)
+                console.log("\n\nSorry, insufficient quantity!\n\n".rainbow)
                 console.log("*****************************".rainbow)
                 anotherAsk()
             }
@@ -107,14 +107,14 @@ function askCustomer() {
             {
                 name: "buy",
                 type: "confirm",
-                message: "\nWould you like to order another item?\n"
+                message: "\nWould you like to order another item?\n".yellow
             }
         ]).then(function(data) {
             if (data.buy) {
                 showProducts()
             } else {
                 console.log("*************************************************************************")
-                console.log("Thank you for shopping with us! Looking forward to seeing you next time!".america)
+                console.log("\n\nThank you for shopping with us! Looking forward to seeing you next time!\n\n".cyan)
                 console.log("*************************************************************************")
                 connection.end()
             }
