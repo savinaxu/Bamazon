@@ -12,9 +12,9 @@ CREATE TABLE products(
     PRIMARY KEY (item_id)
 );
 
-CREATE TABLE departemnts(
+CREATE TABLE departments(
     department_id INT NOT NULL AUTO_INCREMENT,
     department_name VARCHAR(100) NOT NULL,
-    over_head_costs INT(10)
+    over_head_costs DECIMAL(10,2) NULL,
     PRIMARY KEY (department_id)
-)
+);
