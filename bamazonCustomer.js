@@ -4,7 +4,7 @@ const colors = require("colors");
 
 const connection = mysql.createConnection({
     host: "localhost",
-    port: 3307,
+    port: 3306,
     user: "root",
     password: "password",
     database: "bamazon_db"
@@ -67,10 +67,11 @@ function askCustomer() {
 
         connection.query(queryData, [data.id], function (err, result) {
             if (err) throw err;
-            let itemInventory = result[0].stock_quantity;
-            let itemPrice = result[0].price;
+            let itemInventory = parseInt(result[0].stock_quantity);
+            let itemPrice = parseInt(result[0].price);
             let changedInventory = itemInventory - parseInt(data.units);
             let totalCost = (parseInt(data.units) * itemPrice).toFixed(2);
+            let sales = parseInt(result[0].product_sales) + parseInt(totalCost)
 
 
             if (changedInventory >= 0) {
@@ -79,8 +80,10 @@ function askCustomer() {
                 console.log("***************************************")
                 let updateData = "UPDATE products SET ? WHERE ?"
                 connection.query(updateData,
-                    [{
-                            stock_quantity: changedInventory
+                    [
+                        {
+                            stock_quantity: changedInventory,
+                            product_sales: sales
                         },
                         {
                             item_id: data.id
