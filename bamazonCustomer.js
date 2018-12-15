@@ -4,10 +4,10 @@ const colors = require("colors");
 
 const connection = mysql.createConnection({
     host: "localhost",
-    port: 3306,
+    port: 3307,
     user: "root",
     password: "password",
-    database: "bamazon"
+    database: "bamazon_db"
 });
 
 let productsInTotal
