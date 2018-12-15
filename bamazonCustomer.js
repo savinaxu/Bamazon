@@ -14,7 +14,7 @@ let productsInTotal
 
 function showProducts() {
     let query = "SELECT * FROM products";
-    connection.query(query, function(err, res) {
+    connection.query(query, function (err, res) {
         if (err) throw err;
         console.log("------------------------------------------------------------------------------")
         console.log("ID \tPrice($) \tProduct")
@@ -32,12 +32,11 @@ function showProducts() {
 }
 
 function askCustomer() {
-    inquirer.prompt([
-        {
+    inquirer.prompt([{
             name: "id",
             type: "input",
             message: "\nPlease select the ID of the product you would like to buy?".yellow,
-            validate: function(input) {
+            validate: function (input) {
                 if (parseInt(input) <= productsInTotal) {
                     return true
                 } else {
@@ -52,7 +51,7 @@ function askCustomer() {
             name: "units",
             type: "input",
             message: "\nPlease enter how many units of the product you would like to buy?".yellow,
-            validate: function(input) {
+            validate: function (input) {
                 if (!isNaN(input) && parseInt(input) > 0) {
                     return true
                 } else {
@@ -63,10 +62,10 @@ function askCustomer() {
                 }
             }
         }
-    ]).then(function(data) {
+    ]).then(function (data) {
         let queryData = "SELECT * FROM products WHERE item_id=?"
-        
-        connection.query(queryData, [data.id], function(err, result) {
+
+        connection.query(queryData, [data.id], function (err, result) {
             if (err) throw err;
             let itemInventory = result[0].stock_quantity;
             let itemPrice = result[0].price;
@@ -75,20 +74,19 @@ function askCustomer() {
 
 
             if (changedInventory >= 0) {
-                console.log("***************************************".magenta)
+                console.log("***************************************")
                 console.log("\n\nYour total costs is $ ".magenta + totalCost + " !\n\n".magenta)
-                console.log("***************************************".magenta)
+                console.log("***************************************")
                 let updateData = "UPDATE products SET ? WHERE ?"
                 connection.query(updateData,
-                    [
-                        {
+                    [{
                             stock_quantity: changedInventory
                         },
                         {
                             item_id: data.id
                         }
-                    ], 
-                    function(err, res) {
+                    ],
+                    function (err, res) {
                         return
                     }
                 )
@@ -103,13 +101,11 @@ function askCustomer() {
     })
 
     function anotherAsk() {
-        inquirer.prompt([
-            {
-                name: "buy",
-                type: "confirm",
-                message: "\nWould you like to order another item?\n".yellow
-            }
-        ]).then(function(data) {
+        inquirer.prompt([{
+            name: "buy",
+            type: "confirm",
+            message: "\nWould you like to order another item?\n".yellow
+        }]).then(function (data) {
             if (data.buy) {
                 showProducts()
             } else {
