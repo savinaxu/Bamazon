@@ -11,3 +11,10 @@ CREATE TABLE products(
     stock_quantity INT(10),
     PRIMARY KEY (item_id)
 );
+
+CREATE TABLE departemnts(
+    department_id INT NOT NULL AUTO_INCREMENT,
+    department_name VARCHAR(100) NOT NULL,
+    over_head_costs INT(10)
+    PRIMARY KEY (department_id)
+)
